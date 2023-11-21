@@ -1,44 +1,38 @@
-/* eslint-disable no-console */
-
+import "dotenv/config";
 import { DataSource } from "typeorm";
 
-function getSSLConfig(env: string | undefined) {
-  const configs: { [key: string]: boolean | { [key: string]: boolean } } = {
-    production: { rejectUnauthorized: true },
-    local: false,
-    deploy: { rejectUnauthorized: false },
-  };
-  return env === undefined ? configs.local : configs[env];
-}
-export const dataSource = new DataSource({
-  url: "postgres://commentsdb_s6hg_user:q3lK3uiZs83Ff3qTIjp3LDN8MZd95udY@dpg-clea4i0lccns73e9h53g-a.frankfurt-postgres.render.com/commentsdb_s6hg",
-  // host: process.env.POSTGRES_HOST,
-  // port: Number(process.env.POSTGRES_PORT_DB),
-  logging: ["query", "error"],
+// function getSSLConfig(env: string | undefined) {
+//   const configs: { [key: string]: boolean | { [key: string]: boolean } } = {
+//     production: { rejectUnauthorized: true },
+//     local: false,
+//     deploy: { rejectUnauthorized: false },
+//   };
+//   return env === undefined ? configs.local : configs[env];
+// }
+const {
+  POSTGRES_HOST,
+  POSTGRES_PORT_DB,
+  POSTGRES_DB,
+  POSTGRES_USER,
+  POSTGRES_PASSWORD,
+} = process.env;
+
+const dataSource = new DataSource({
+  host: POSTGRES_HOST,
+  port: Number(POSTGRES_PORT_DB),
+  // logging: ["query", "error"],
   type: "postgres",
-  // entities: ["dist/**/*.entity.{ts,js}"],
+  entities: ["dist/**/*.entity.{ts,js}"],
   // migrations: ["dist/migrations/**/*.{ts,js}"],
   // subscribers: ["src/subscriber/**/*.ts"],
-  // database: process.env.POSTGRES_DB,
-  // username: process.env.POSTGRES_USER,
-  // password: process.env.POSTGRES_PASSWORD,
+  database: POSTGRES_DB,
+  username: POSTGRES_USER,
+  password: POSTGRES_PASSWORD,
   // ssl: getSSLConfig(process.env.SERVER_MODE),
+  // synchronize: true,
+  logging: true,
   synchronize: true,
 });
+console.log("dataSource:", dataSource);
 
-const connectDB = async () => {
-  try {
-    await dataSource.initialize();
-    console.log("PostgresDB Connected...");
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      console.log("error");
-      console.error(err.message);
-    } else {
-      console.error("Unknown Error");
-    }
-    process.exit(1);
-  }
-};
-
-export default connectDB;
+export default dataSource;
