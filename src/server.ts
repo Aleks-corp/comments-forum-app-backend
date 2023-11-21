@@ -9,7 +9,9 @@ dataSource
     console.log("Data Source has been initialized!");
     console.log("PostgresDB Connected...");
   })
-  .then(app.listen(port, () => console.log(`Server started on port ${port}`)))
+  .then(() => {
+    app.listen(port, () => console.log(`Server started on port ${port}`));
+  })
   .catch((err) => {
     console.error("Error during Data Source initialization", err);
     process.exit(1);
