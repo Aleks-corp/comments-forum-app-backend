@@ -22,7 +22,7 @@ const dataSource = new DataSource({
   port: Number(POSTGRES_PORT_DB),
   logging: ["query", "error"],
   type: "postgres",
-  entities: ["dist/**/*.entity.{ts,js}"],
+  entities: [__dirname + "/../**/*.entity.{js,ts}"],
   // migrations: ["dist/migrations/**/*.{ts,js}"],
   // subscribers: ["src/subscriber/**/*.ts"],
   database: POSTGRES_DB,
