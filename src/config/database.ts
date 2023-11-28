@@ -1,14 +1,14 @@
 import "dotenv/config";
 import { DataSource } from "typeorm";
 
-// function getSSLConfig(env: string | undefined) {
-//   const configs: { [key: string]: boolean | { [key: string]: boolean } } = {
-//     production: { rejectUnauthorized: true },
-//     local: false,
-//     deploy: { rejectUnauthorized: false },
-//   };
-//   return env === undefined ? configs.local : configs[env];
-// }
+function getSSLConfig(env: string | undefined) {
+  const configs: { [key: string]: boolean | { [key: string]: boolean } } = {
+    production: { rejectUnauthorized: true },
+    local: false,
+    deploy: { rejectUnauthorized: false },
+  };
+  return env === undefined ? configs.local : configs[env];
+}
 const {
   POSTGRES_HOST,
   POSTGRES_PORT_DB,
@@ -20,7 +20,7 @@ const {
 const dataSource = new DataSource({
   host: POSTGRES_HOST,
   port: Number(POSTGRES_PORT_DB),
-  // logging: ["query", "error"],
+  logging: ["query", "error"],
   type: "postgres",
   entities: ["dist/**/*.entity.{ts,js}"],
   // migrations: ["dist/migrations/**/*.{ts,js}"],
@@ -28,11 +28,8 @@ const dataSource = new DataSource({
   database: POSTGRES_DB,
   username: POSTGRES_USER,
   password: POSTGRES_PASSWORD,
-  // ssl: getSSLConfig(process.env.SERVER_MODE),
-  // synchronize: true,
-  logging: true,
+  ssl: getSSLConfig(process.env.SERVER_MODE),
   synchronize: true,
 });
-console.log("dataSource:", dataSource);
 
 export default dataSource;
