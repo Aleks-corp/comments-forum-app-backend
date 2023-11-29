@@ -9,7 +9,7 @@ const verifyCaptcha = (req: Request, res: Response, next: NextFunction) => {
     if (result) {
       next();
     } else {
-      res.status(200).json({ message: "Invalid captcha" });
+      res.status(422).json({ message: "Invalid captcha" });
     }
   });
 };

@@ -36,7 +36,7 @@ const getCaptcha = (req: Request, res: Response) => {
     if (err) {
       res.send({ error: "Error generating the captcha. Please try again." });
     } else {
-      res.send({ image, hash });
+      res.json({ image, hash });
     }
   });
 };
@@ -49,7 +49,7 @@ const verifyCaptcha = (req: Request, res: Response, next: NextFunction) => {
       res.status(200).json({ message: "Verification successful" });
       //   next();
     } else {
-      res.status(200).json({ message: "Invalid captcha" });
+      res.status(400).json({ message: "Invalid captcha" });
     }
   });
 };
